@@ -5,6 +5,8 @@
 #include <termios.h>
 #include <stdio.h>
 #include <exception>
+#include <std_msgs/Int32.h>
+
 #define KEYCODE_R 0x43 
 #define KEYCODE_L 0x44
 #define KEYCODE_U 0x41
@@ -17,29 +19,30 @@ using namespace std;
 
 
 int counter=0; 
+//bool flag[5]; 
 class TeleopTurtle
 {
 public:
   TeleopTurtle();
   void keyLoop();
-  void controlCallBack1(const turtlesim::PosePtr& pose);
-  void controlCallBack2(const turtlesim::PosePtr& pose);
-  void controlCallBack3(const turtlesim::PosePtr& pose);
-  void controlCallBack4(const turtlesim::PosePtr& pose);
-  void controlCallBack5(const turtlesim::PosePtr& pose);
+ // void controlCallBack1(const turtlesim::PosePtr& pose);
+ // void controlCallBack2(const turtlesim::PosePtr& pose);
+ // void controlCallBack3(const turtlesim::PosePtr& pose);
+ // void controlCallBack4(const turtlesim::PosePtr& pose);
+ // void controlCallBack5(const turtlesim::PosePtr& pose);
   
 
 private:
   
   ros::NodeHandle nh_;
-  ros::NodeHandle nhSub_;
-  ros::Publisher twist_pub_[5];
-  bool flag[5]; 
+ // ros::NodeHandle nhSub_;
+
   double linear_, angular_, l_scale_, a_scale_;
-  //ros::Publisher selfControl[5];
-  ros::Subscriber receiveControl[5];
-  turtlesim::Pose positions[5];
-  
+  //ros::Publisher selfControl;
+  ros::Publisher recognize;
+  // ros::Subscriber receiveControl[5];
+  // turtlesim::Pose positions[5];
+
 };
 
 TeleopTurtle::TeleopTurtle():
@@ -52,24 +55,19 @@ TeleopTurtle::TeleopTurtle():
   nh_.param("scale_linear", l_scale_, l_scale_);
 
  
-  twist_pub_[0] = nh_.advertise<geometry_msgs::Twist>("turtle2/cmd_vel", 1);
-  twist_pub_[1] = nh_.advertise<geometry_msgs::Twist>("turtle3/cmd_vel", 1);
-  twist_pub_[2] = nh_.advertise<geometry_msgs::Twist>("turtle4/cmd_vel", 1);
-  twist_pub_[3] = nh_.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
-  twist_pub_[4] = nh_.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
+  // selfControl = nh_.advertise<geometry_msgs::Twist>("turtle2/cmd_vel", 1);
+   recognize=nh_.advertise<std_msgs::Int32>("turtle2/cmd_vel_temp",1); 
+  // twist_pub_[1] = nh_.advertise<geometry_msgs::Twist>("turtle3/cmd_vel", 1);
+  // twist_pub_[2] = nh_.advertise<geometry_msgs::Twist>("turtle4/cmd_vel", 1);
+  // twist_pub_[3] = nh_.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
+  // twist_pub_[4] = nh_.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
 
 
-  // selfControl[0] = nh_.advertise<turtlesim::Pose>("turtle2/pose", 1);
-  // selfControl[1] = nh_.advertise<turtlesim::Pose>("turtle3/pose", 1);
-  // selfControl[2] = nh_.advertise<turtlesim::Pose>("turtle4/pose", 1);
-  // selfControl[3] = nh_.advertise<turtlesim::Pose>("turtle5/pose", 1);
-  // selfControl[4] = nh_.advertise<turtlesim::Pose>("turtle6/pose", 1);
-
-  receiveControl[0] = nh_.subscribe("turtle2/pose", 5 , &TeleopTurtle::controlCallBack1,this);
-  receiveControl[1] = nh_.subscribe("turtle3/pose",5 , &TeleopTurtle::controlCallBack2,this);
-  receiveControl[2]=  nh_.subscribe("turtle4/pose", 5 , &TeleopTurtle::controlCallBack3,this);
-  receiveControl[3] = nh_.subscribe("turtle5/pose", 5 ,&TeleopTurtle::controlCallBack4,this);
-  receiveControl[4] = nh_.subscribe("turtle6/pose", 5 , &TeleopTurtle::controlCallBack5,this);
+  // receiveControl[0] = nh_.subscribe("turtle2/pose", 5 , &TeleopTurtle::controlCallBack1,this);
+  // receiveControl[1] = nh_.subscribe("turtle3/pose",5 , &TeleopTurtle::controlCallBack2,this);
+  // receiveControl[2]=  nh_.subscribe("turtle4/pose", 5 , &TeleopTurtle::controlCallBack3,this);
+  // receiveControl[3] = nh_.subscribe("turtle5/pose", 5 ,&TeleopTurtle::controlCallBack4,this);
+  // receiveControl[4] = nh_.subscribe("turtle6/pose", 5 , &TeleopTurtle::controlCallBack5,this);
   
 
 }
@@ -84,61 +82,46 @@ void quit(int sig)
   ros::shutdown();
   exit(0);
 }
-void TeleopTurtle::controlCallBack1(const turtlesim::PosePtr& pose){
-  // geometry_msgs::Twist move;
-  // //twist.angular.z = pose->angular_velocity;
-  // move.angular.z = -(pose->angular_velocity);
-  // for(int i=0;i<5;i++){
-  //   if(flag[i]==0){
-  //   twist_pub_[i].publish(move);
-  //   }
-  // }
-  positions[0]=(*pose);
-  ROS_INFO("TWIST ghfhgUBLISHED");
-  cout<<positions[0].angular_velocity<<endl;
- // twist1.angular.z= -(positions[counter]->angular_velocity);
-  //return;
-}
-void TeleopTurtle::controlCallBack2(const turtlesim::PosePtr& pose){
-  positions[1]=(*pose);
+// void TeleopTurtle::controlCallBack1(const turtlesim::PosePtr& pose){
+
+//   positions[0]=(*pose);
+//   ROS_INFO("TWIST ghfhgUBLISHED");
+//   //cout<<positions[0].angular_velocity<<endl;
+
+// }
+// void TeleopTurtle::controlCallBack2(const turtlesim::PosePtr& pose){
+//   positions[1]=(*pose);
   
-  // ROS_ERROR(positions[1]->x);
-  ROS_INFO("TWIST ghfhgUBLISHED");
-  cout<<positions[1].angular_velocity<<endl;
- // twist1.angular.z= -(positions[counter]->angular_velocity);
-//return;
-}
-void TeleopTurtle::controlCallBack3(const turtlesim::PosePtr& pose){
-  positions[2]=(*pose);
-  ROS_INFO("TWIST ghfhgUBLISHED");
-  cout<<positions[2].angular_velocity<<endl;
- // twist1.angular.z= -(positions[counter]->angular_velocity);
-  // ROS_ERROR(positions[2]->x);
-  //return;
-}
-void TeleopTurtle::controlCallBack4(const turtlesim::PosePtr& pose){
-  positions[3]=(*pose);
-  ROS_INFO("TWIST ghfhgUBLISHED");
-  cout<<positions[3].angular_velocity<<endl;
-  //twist1.angular.z= -(positions[counter]->angular_velocity);
-  // ROS_ERROR(positions[3]->x);
-//return;
-}
-void TeleopTurtle::controlCallBack5(const turtlesim::PosePtr& pose){
-  positions[4]=(*pose);
-  ROS_INFO("5esfgh");
-  cout<<positions[4].angular_velocity<<endl;
-  //twist1.angular.z= -(positions[counter]->angular_velocity);
- //  ROS_ERROR(positions[4]->x);
-//return;
-}
+  
+//   ROS_INFO("TWIST ghfhgUBLISHED");
+//   cout<<positions[1].angular_velocity<<endl;
+ 
+// }
+// void TeleopTurtle::controlCallBack3(const turtlesim::PosePtr& pose){
+//   positions[2]=(*pose);
+//   ROS_INFO("TWIST ghfhgUBLISHED");
+//   cout<<positions[2].angular_velocity<<endl;
+ 
+// }
+// void TeleopTurtle::controlCallBack4(const turtlesim::PosePtr& pose){
+//   positions[3]=(*pose);
+//   ROS_INFO("TWIST ghfhgUBLISHED");
+//   cout<<positions[3].angular_velocity<<endl;
+
+//  }
+
+// void TeleopTurtle::controlCallBack5(const turtlesim::PosePtr& pose){
+//   positions[4]=(*pose);
+//   ROS_INFO("5esfgh");
+//   cout<<positions[4].angular_velocity<<endl;
+  
+//   }
 
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "teleop_turtle");
   TeleopTurtle teleop_turtle;
-
   signal(SIGINT,quit);
 try{
   teleop_turtle.keyLoop();}
@@ -162,7 +145,8 @@ void TeleopTurtle::keyLoop()
   tcgetattr(kfd, &cooked);
   memcpy(&raw, &cooked, sizeof(struct termios));
   raw.c_lflag &=~ (ICANON | ECHO);
-  // Setting a new line, then end of file                         
+  // Setting a new line, then end of file 
+
   raw.c_cc[VEOL] = 1;
   raw.c_cc[VEOF] = 2;
   tcsetattr(kfd, TCSANOW, &raw);
@@ -225,34 +209,39 @@ void TeleopTurtle::keyLoop()
    
 
     geometry_msgs::Twist twist;
-    geometry_msgs::Twist twist1;
+   // geometry_msgs::Twist twist1;
     twist.angular.z = a_scale_*angular_;
     twist.linear.x = l_scale_*linear_;
     if(dirty ==true)
     {
-      for(int i=0 ;i<5 ; i++){
-       flag[i]=0;
-      }
-      twist_pub_[counter].publish(twist);
+
+      //selfControl.publish(twist);
+      std_msgs::Int32 temp_var;
+      temp_var.data=counter;
+      recognize.publish(temp_var);
       ROS_INFO("TWIST PUBLISHED");
-      flag[counter]=1; 
-       try {
-      twist1.linear.x= -((float)(positions[counter].angular_velocity));}
-      catch(exception& ourerror){
-           cout<<ourerror.what();
+     // flag[counter]=1; 
+    //    try {
+    //    //  if((float)positions[counter].linear_velocity==0 && (float)positions[counter].angular_velocity==0){
+    //   //     twist1.linear.x=2;
+    //   //     twist1.angular.z=-2;
+    //    //  }else{
+    //  // twist1.linear.x= -((float)(positions[counter].linear_velocity));
+    //  // twist1.angular.z=-((float)(positions[counter].angular_velocity));//}
+    //    }
+    //   catch(exception& ourerror){
+    //        cout<<ourerror.what();
+    //   };
+     // twist1.linear.y=0;
+     // twist1.linear.z=0;
 
-      };
-      twist1.linear.y=0;
-      twist1.linear.z=0;
-
-      twist1.angular.x=0;
-      twist1.angular.y=0;
-      twist1.angular.z=0;
-      for(int i=0 ;i<5 ; i++){
-       if(flag[i]==0){
-         twist_pub_[i].publish(twist1);
-               }
-      }
+     // twist1.angular.x=0;
+    //  twist1.angular.y=0;
+      // for(int i=0 ;i<5 ; i++){
+      //  if(flag[i]==0){
+      //    twist_pub_[i].publish(twist1);
+      //          }
+      // }
      
       dirty=false;
       ROS_INFO("before spin");
@@ -263,8 +252,5 @@ void TeleopTurtle::keyLoop()
   }
 
 
-  //return;
-//}
-
-
+  
 

@@ -23,7 +23,7 @@ int main(int argc,char ** argv){
     ros::NodeHandle nh;
     ros::service::waitForService("spawn",20);
     ros::ServiceClient add_turtle = nh.serviceClient<turtlesim::Spawn>("spawn");
-    pub=nh.advertise<geometry_msgs::Twist>("/turtle2/cmd_vel",10);
+    //pub=nh.advertise<geometry_msgs::Twist>("/turtle2/cmd_vel",10);
    
 
     turtlesim::Spawn srv;
