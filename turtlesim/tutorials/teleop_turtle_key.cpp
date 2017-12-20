@@ -19,6 +19,7 @@ using namespace std;
 
 
 int counter=0; 
+
 //bool flag[5]; 
 class TeleopTurtle
 {
@@ -36,7 +37,7 @@ private:
   
   ros::NodeHandle nh_;
  // ros::NodeHandle nhSub_;
-
+  ros::Publisher selfControl[5];
   double linear_, angular_, l_scale_, a_scale_;
   //ros::Publisher selfControl;
   ros::Publisher recognize;
@@ -56,11 +57,12 @@ TeleopTurtle::TeleopTurtle():
 
  
   // selfControl = nh_.advertise<geometry_msgs::Twist>("turtle2/cmd_vel", 1);
-   recognize=nh_.advertise<std_msgs::Int32>("turtle2/cmd_vel_temp",1); 
-  // twist_pub_[1] = nh_.advertise<geometry_msgs::Twist>("turtle3/cmd_vel", 1);
-  // twist_pub_[2] = nh_.advertise<geometry_msgs::Twist>("turtle4/cmd_vel", 1);
-  // twist_pub_[3] = nh_.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
-  // twist_pub_[4] = nh_.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
+   recognize=nh_.advertise<std_msgs::Int32>("turtle8/cmd_vel_temp",1); 
+  selfControl[0] = nh_.advertise<geometry_msgs::Twist>("turtle2/cmd_vel", 1); 
+  selfControl[1] = nh_.advertise<geometry_msgs::Twist>("turtle3/cmd_vel", 1);
+  selfControl[2] = nh_.advertise<geometry_msgs::Twist>("turtle4/cmd_vel", 1);
+  selfControl[3] = nh_.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
+  selfControl[4] = nh_.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
 
 
   // receiveControl[0] = nh_.subscribe("turtle2/pose", 5 , &TeleopTurtle::controlCallBack1,this);
@@ -170,7 +172,7 @@ void TeleopTurtle::keyLoop()
     linear_=angular_=0;
     ROS_INFO("i am running \n");
     ROS_ERROR("value: 0x%02X\n", c);
-    // cout<<std :: hex<<(int)c<<endl;
+    
     switch(c)
     {
       case KEYCODE_L:
@@ -218,8 +220,9 @@ void TeleopTurtle::keyLoop()
       //selfControl.publish(twist);
       std_msgs::Int32 temp_var;
       temp_var.data=counter;
+      selfControl[counter].publish(twist);
       recognize.publish(temp_var);
-      ROS_INFO("TWIST PUBLISHED");
+      cout<<counter<<endl;
      // flag[counter]=1; 
     //    try {
     //    //  if((float)positions[counter].linear_velocity==0 && (float)positions[counter].angular_velocity==0){

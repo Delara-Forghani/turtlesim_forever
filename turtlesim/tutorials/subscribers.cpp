@@ -24,6 +24,8 @@ ros::NodeHandle nh;
 int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "Subscribers");
+  Subs subscribes=Subs();
+  ros::spin();
     return 0;
 }
 
@@ -32,7 +34,7 @@ Subs::Subs(){
 
 
 receiveControl[0] = nh.subscribe("turtle2/pose", 5 , &Subs::controlCallBack1,this);
-receiveControl[1] = nh.subscribe("turtle3/pose",5 , &Subs::controlCallBack2,this);
+receiveControl[1] = nh.subscribe("turtle3/pose", 5 , &Subs::controlCallBack2,this);
 receiveControl[2]=  nh.subscribe("turtle4/pose", 5 , &Subs::controlCallBack3,this);
 receiveControl[3] = nh.subscribe("turtle5/pose", 5 ,&Subs::controlCallBack4,this);
 receiveControl[4] = nh.subscribe("turtle6/pose", 5 , &Subs::controlCallBack5,this);
@@ -41,44 +43,48 @@ receiveControl[4] = nh.subscribe("turtle6/pose", 5 , &Subs::controlCallBack5,thi
 }
 void Subs::controlCallBack1(const turtlesim::PosePtr& pose){
 
- 
+  ROS_INFO("set param1");
   nh.setParam("data1x",pose->x);
   nh.setParam("data1y",pose->y);
 
-  ROS_INFO("TWIST ghfhgUBLISHED");
+ 
  
 
 }
 void Subs::controlCallBack2(const turtlesim::PosePtr& pose){
   
+  ROS_INFO("set param2");
   nh.setParam("data2x", pose->x);
   nh.setParam("data2y", pose->y);
 
-  ROS_INFO("TWIST ghfhgUBLISHED");
+  
  
 }
 void Subs::controlCallBack3(const turtlesim::PosePtr& pose){
-  
+
+  ROS_INFO("set param3"); 
   nh.setParam("data3x",pose->x);
   nh.setParam("data3y",pose->y);
-  ROS_INFO("TWIST ghfhgUBLISHED");
+ 
   
  
 }
 void Subs::controlCallBack4(const turtlesim::PosePtr& pose){
 
+  ROS_INFO("set param4");
   nh.setParam("data4x",pose->x);
   nh.setParam("data4y",pose->y);
-  ROS_INFO("TWIST ghfhgUBLISHED");
+  
   
  }
 
 void Subs::controlCallBack5(const turtlesim::PosePtr& pose){
+ ROS_INFO("set param5"); 
 
   nh.setParam("data5x",pose->x);
   nh.setParam("data5y",pose->y);
 
-  ROS_INFO("5esfgh"); 
+ 
   }
 
 
