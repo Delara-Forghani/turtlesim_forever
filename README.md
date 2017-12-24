@@ -10,11 +10,11 @@ So users can take control of one turtle at a time, they can also switch between 
 
 
 run the following commands:
-$ roslaunch turtlesim multisim.launch
-$ roslaunch spawn1 turtleSpawn.launch 
-$ roslaunch spawn1 subscribe.launch
-$ roslaunch spawn1 publish.launch
-$ roslaunch spawn1 turtle_teleop_aut.launch
+* $ roslaunch turtlesim multisim.launch
+* $ roslaunch spawn1 turtleSpawn.launch 
+* $ roslaunch spawn1 subscribe.launch
+* $ roslaunch spawn1 publish.launch
+* $ roslaunch spawn1 turtle_teleop_aut.launch
 
 
 ## Affiliation
