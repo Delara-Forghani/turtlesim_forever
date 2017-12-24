@@ -6,7 +6,7 @@ This project is a basic program which shows how to spawn several turtles on the 
 So users can take control of one turtle at a time, they can also switch between the turtles using E and W keys. 
 
 
-#Running the tests
+## Running the tests
 
 
 run the following commands:
@@ -17,6 +17,6 @@ $ roslaunch spawn1 publish.launch
 $ roslaunch spawn1 turtle_teleop_aut.launch
 
 
-#Affiliation
+## Affiliation
 
 CRLab at AmirKabir university of Technology.
