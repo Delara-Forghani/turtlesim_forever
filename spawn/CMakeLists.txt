@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(spawn1)
+project(spawn)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -200,10 +200,10 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-add_executable(spawn5
-  src/spawn5.cpp
+add_executable(spawn
+  src/spawn.cpp
 )
-add_dependencies(spawn5 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(spawn5
+add_dependencies(spawn ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(spawn
   ${catkin_LIBRARIES}
 )
