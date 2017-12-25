@@ -9,7 +9,7 @@
 using namespace std;
 
 
-int flag; 
+int flag=0; 
 int predator;
 class pubs{
 
@@ -60,8 +60,8 @@ ros::Rate r(1);
   while (ros::ok())
   {
     if(turtleName==predator){
-         
-    }
+         flag=1;
+    }else{
       nh2.getParam("data1x",positions[0].x);
       nh2.getParam("data1y",positions[0].y);
       nh2.getParam("data1theta",positions[0].theta);
