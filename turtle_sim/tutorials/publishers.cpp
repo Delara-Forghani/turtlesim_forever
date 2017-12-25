@@ -42,7 +42,7 @@ pubs::pubs(){
   twist_pub_[3] = nh2.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
   twist_pub_[4] = nh2.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
 
- sub= nh2.subscribe("turtle8/cmd_vel_temp", 5, &pubs::subCallback,this);
+ sub= nh2.subscribe("predator/specifier", 5, &pubs::subCallback,this);
 }
 
 void pubs::subCallback(std_msgs::Int32 counter1){

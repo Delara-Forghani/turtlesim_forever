@@ -9,12 +9,14 @@ using namespace std;
 ros::Publisher pub;
 
 
-void move(double speed,int direction);
 
 int main(int argc,char ** argv){
 
     ros::init(argc,argv,"myTurtle");
     ros::NodeHandle nh;
+    int turtle_name=0;
+    nh.getParam("turtle_name",turtle_name);
+    nh.setParam("turtle_name",turtle_name++);
     ros::service::waitForService("spawn",20);
     ros::ServiceClient add_turtle = nh.serviceClient<turtlesim::Spawn>("spawn");
     
@@ -26,8 +28,10 @@ int main(int argc,char ** argv){
     srv.request.name=argv[4];
     
     ROS_INFO("%d  %s",argc,argv);
+   // cout<<turtle_name<<endl;
+    
     add_turtle.call(srv);
-   
+    
 
 }
 

@@ -9,12 +9,14 @@
 using namespace std;
 
 
-int flag[5]; 
+int flag; 
 int predator;
 class pubs{
 
 public:
-// turtle_name = "tutle" + nh.getparam 
+int turtleName=0;
+
+
 
 ros::Publisher twist_pub_;
 ros::Subscriber sub ;
@@ -31,34 +33,35 @@ geometry_msgs::Twist twist;
 
 
 pubs::pubs(){
+turtleName=nh.getParam("turtle_name",turtleName);
 
-   for(int i=0;i<5;i++){
-       flag[i]=0;
-   } 
  
-  twist_pub = nh.advertise<geometry_msgs::Twist>("turtle/cmd_vel", 1);
-//   twist_pub_[1] = nh2.advertise<geometry_msgs::Twist>("turtle3/cmd_vel", 1);
-//   twist_pub_[2] = nh2.advertise<geometry_msgs::Twist>("turtle4/cmd_vel", 1);
-//   twist_pub_[3] = nh2.advertise<geometry_msgs::Twist>("turtle5/cmd_vel", 1);
-//   twist_pub_[4] = nh2.advertise<geometry_msgs::Twist>("turtle6/cmd_vel", 1);
+twist_pub = nh.advertise<geometry_msgs::Twist>("turtle/cmd_vel", 1);
 
- sub= nh2.subscribe("turtle8/cmd_vel_temp", 5, &pubs::subCallback,this);
+ sub= nh.subscribe("predator/specifier", 5, &pubs::subCallback,this);
+ movementSubscriber=nh.subscribe("teleop/cmd_vel",5,&pubs::movementCallBack,this); 
+}
+void pubs::movementCallBack(geometry_msgs::Twist twist){
+if(flag==1){
+  geometry_msgs::Twist iMove;
+  iMove.linear.x=twist.linear.x;
+  iMove.angular.z=twist.angular.z;
+  twist_pub.public(iMove);
+}
+
 }
 
 void pubs::subCallback(std_msgs::Int32 counter1){
 ROS_INFO("got message");    
-int counter=counter1.data;
-for(int i=0;i<5;i++){
-    if(i == counter){
-    flag[i]=1;
-    predator=i;
-    }else{
-    flag[i]=0;
-    }
-  }  
+int predator=counter1.data;
+
+
 ros::Rate r(1);    
   while (ros::ok())
   {
+    if(turtleName==predator){
+         
+    }
       nh2.getParam("data1x",positions[0].x);
       nh2.getParam("data1y",positions[0].y);
       nh2.getParam("data1theta",positions[0].theta);
@@ -80,15 +83,14 @@ ros::Rate r(1);
       nh2.getParam("data5theta",positions[4].theta);
       nh2.getParam("data5angular",positions[4].angular_velocity);
 
-     for(int i=0;i<5;i++){
-     if(flag[i]==0){
-        
-        cout<<i<<" "<<positions[i].theta<<" "<< positions[predator].theta<<(double)(M_PI/2)<<endl;
+    
+     
+        //cout<<i<<" "<<positions[i].theta<<" "<< positions[predator].theta<<(double)(M_PI/2)<<endl;
         if((positions[i].theta>0 && positions[predator].theta<0) || (positions[i].theta<0 && positions[predator].theta>0)){
           //if(positions[i].theta==(double)(M_PI/2) + positions[predator].theta || positions[i].theta==(double)(-(M_PI/2)) + positions[predator].theta){
              twist.angular.z=0; 
              twist.linear.x = rand()%5; 
-             twist_pub_[i].publish(twist);  
+             twist_pub.publish(twist);  
       
         //} 
          
@@ -112,7 +114,7 @@ ros::Rate r(1);
          // positions[i].theta=-(M_PI/2) + positions[predator].theta;
           twist.angular.z=(double)(-(M_PI/2)) + positions[predator].theta;
      }
-     twist_pub_[i].publish(twist);
+     twist_pub.publish(twist);
      positions[i].theta=twist.angular.z;
      //twist.angular.z=(atan(positions[i].y/positions[i].x)-atan(-(positions[predator].x/positions[predator].y)));
      
@@ -122,7 +124,7 @@ ros::Rate r(1);
 }
    
        }
-     }
+     
 
    r.sleep();  
   }
