@@ -142,12 +142,16 @@ void TeleopTurtle::keyLoop()
         if(counter > 4){
           counter=0;
         }
+        recognize.publish(temp_var);
+        ROS_DEBUG("predator: %d",counter);
         break;
         case KEYCODE_W:
         counter--;
         if(counter < 0){
         counter=4;
         }
+        recognize.publish(temp_var);
+        ROS_DEBUG("predator: %d",counter);
         break;
     }
    
@@ -163,8 +167,6 @@ void TeleopTurtle::keyLoop()
       temp_var.data=counter;
       cmd_vel_publisher.publish(twist);
       
-      recognize.publish(temp_var);
-      ROS_DEBUG("predator: %d",counter);
       dirty=false;
       ROS_INFO("before spin");
       ros::spinOnce();   

@@ -9,50 +9,57 @@
 using namespace std;
 
 
-int flag=0; 
+int flagImPredator=0; 
 int predator;
-class pubs{
+
+class turtleBrain{
 
 public:
-int turtleName=0;
+int turtleCounter=0;
 
 
 
-ros::Publisher twist_pub_;
-ros::Subscriber sub ;
-void subCallback(std_msgs::Int32 counter1);
-turtlesim::Pose positions[5];
-pubs();
+ros::Publisher twist_pub;
+ros::Subscriber sub;
+void setPredatorCallback(std_msgs::Int32 counter);
+turtlesim::Pose positions;
+turtleBrain();
 
 private:
 ros::NodeHandle nh;
 geometry_msgs::Twist twist;
-
-
 };
 
 
-pubs::pubs(){
-turtleName=nh.getParam("turtle_name",turtleName);
+turtleBrain::turtleBrain(){
 
- 
-twist_pub = nh.advertise<geometry_msgs::Twist>("turtle/cmd_vel", 1);
+nh.getParam("turtle_counter",turtleCounter); 
+twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+poses = nh.subscribe("pose", 5 , &Subs::controlCallBack,this);
 
- sub= nh.subscribe("predator/specifier", 5, &pubs::subCallback,this);
- movementSubscriber=nh.subscribe("teleop/cmd_vel",5,&pubs::movementCallBack,this); 
+ sub= nh.subscribe("/predator/specifier", 5, &turtleBrain::setPredatorCallback,this);
+ movementSubscriber=nh.subscribe("/teleop/cmd_vel",5,&turtleBrain::movementCallBack,this); 
 }
-void pubs::movementCallBack(geometry_msgs::Twist twist){
-if(flag==1){
+
+void turtleBrain::movementCallBack(geometry_msgs::Twist twist){
+if(flagImPredator==1){
   geometry_msgs::Twist iMove;
   iMove.linear.x=twist.linear.x;
   iMove.angular.z=twist.angular.z;
   twist_pub.public(iMove);
 }
+}
+void Subs::controlCallBack(const turtlesim::PosePtr& pose){
 
+  ROS_INFO("set param pose turtle_%d", turtleName);
+  // nh.setParam(turtleName,pose);
+  nh.setParam("1",pose);
 }
 
-void pubs::subCallback(std_msgs::Int32 counter1){
-ROS_INFO("got message");    
+
+
+void turtleBrain::setPredatorCallback(std_msgs::Int32 counter){
+ROS_INFO("predator changed");    
 int predator=counter1.data;
 
 
@@ -62,6 +69,7 @@ ros::Rate r(1);
     if(turtleName==predator){
          flag=1;
     }else{
+// for each turtle get position
       nh2.getParam("data1x",positions[0].x);
       nh2.getParam("data1y",positions[0].y);
       nh2.getParam("data1theta",positions[0].theta);
@@ -132,7 +140,7 @@ ros::Rate r(1);
 int main(int argc, char *argv[])
 {
    ros::init(argc, argv, "publishers");
-   pubs publishers=pubs();
+   turtleBrain publishers=turtleBrain();
    ros::spin();  
     return 0;
 }

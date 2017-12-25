@@ -1,5 +1,5 @@
 <launch>
 
-<node name="myTurtle4" pkg="spawn" type="spawn" args="1 7 0 turtle1"/>
+<node name="myTurtle" pkg="spawn" type="spawn" args="1 7 0 turtle1"/>
 
 </launch>

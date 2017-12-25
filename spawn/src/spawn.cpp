@@ -15,8 +15,8 @@ int main(int argc,char ** argv){
     ros::init(argc,argv,"myTurtle");
     ros::NodeHandle nh;
     int turtle_name=0;
-    nh.getParam("turtle_name",turtle_name);
-    nh.setParam("turtle_name",turtle_name++);
+    nh.getParam("turtle_counter",turtle_name);
+    nh.setParam("turtle_counter",turtle_name++);
     ros::service::waitForService("spawn",20);
     ros::ServiceClient add_turtle = nh.serviceClient<turtlesim::Spawn>("spawn");
     
