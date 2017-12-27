@@ -19,6 +19,7 @@ using namespace std;
 
 
 int counter=0; 
+std_msgs::Int32 temp_var;
 
 class TeleopTurtle
 {
@@ -47,7 +48,7 @@ TeleopTurtle::TeleopTurtle():
 
  
   recognize=nh_.advertise<std_msgs::Int32>("predator/specifier",1); 
-  cmd_vel_publisher = nh_.advertise<geometry_msgs::Twist>("teleop/cmd_vel", 1);
+  cmd_vel_publisher = nh_.advertise<geometry_msgs::Twist>("/teleop/cmd_vel", 1);
 
 }
 
@@ -142,16 +143,16 @@ void TeleopTurtle::keyLoop()
         if(counter > 4){
           counter=0;
         }
+        temp_var.data=counter;
         recognize.publish(temp_var);
-        ROS_DEBUG("predator: %d",counter);
         break;
         case KEYCODE_W:
         counter--;
         if(counter < 0){
         counter=4;
         }
+        temp_var.data=counter;
         recognize.publish(temp_var);
-        ROS_DEBUG("predator: %d",counter);
         break;
     }
    
@@ -162,11 +163,8 @@ void TeleopTurtle::keyLoop()
     if(dirty ==true)
     {
 
-      //selfControl.publish(twist);
-      std_msgs::Int32 temp_var;
-      temp_var.data=counter;
       cmd_vel_publisher.publish(twist);
-      
+      ROS_DEBUG("predator: %d",counter);
       dirty=false;
       ROS_INFO("before spin");
       ros::spinOnce();   

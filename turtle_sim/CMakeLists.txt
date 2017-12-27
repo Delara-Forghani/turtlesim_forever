@@ -46,8 +46,12 @@ add_dependencies(draw_square turtlesim_gencpp)
 add_executable(mimic tutorials/mimic.cpp)
 target_link_libraries(mimic ${catkin_LIBRARIES})
 add_dependencies(mimic turtlesim_gencpp)
-add_executable(publishers tutorials/publishers.cpp)
-add_executable(subscribers tutorials/subscribers.cpp)
+
+add_executable(turtle_brain tutorials/turtle_brain.cpp)
+add_dependencies(turtle_brain ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(turtle_brain
+  ${catkin_LIBRARIES}
+)
 install(TARGETS turtlesim_node turtle_teleop_key draw_square mimic
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
@@ -57,13 +61,6 @@ install(DIRECTORY images
 
 
 
-add_dependencies(publishers ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(publishers
-  ${catkin_LIBRARIES}
-)
 
 
-add_dependencies(subscribers ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(subscribers
-  ${catkin_LIBRARIES}
-)
+

@@ -9,138 +9,114 @@
 using namespace std;
 
 
-int flagImPredator=0; 
-int predator;
+int imPredator=0; 
+int predator=1;
+
 
 class turtleBrain{
 
 public:
+ros::NodeHandle nh;
+geometry_msgs::Twist twist_msg;
 int turtleCounter=0;
-
-
-
 ros::Publisher twist_pub;
 ros::Subscriber sub;
-void setPredatorCallback(std_msgs::Int32 counter);
-turtlesim::Pose positions;
+ros::Subscriber movementSubscriber;
+ros::Subscriber poses;
+turtlesim::Pose my_pose;
+turtlesim::Pose predator_pose;
 turtleBrain();
+void predatorMovementCallBack(geometry_msgs::Twist twist);
+void controlCallBack(const turtlesim::PosePtr& pose);
+void setPredatorCallback(std_msgs::Int32 counter);
 
-private:
-ros::NodeHandle nh;
-geometry_msgs::Twist twist;
 };
 
 
 turtleBrain::turtleBrain(){
 
-nh.getParam("turtle_counter",turtleCounter); 
+nh.getParam("/turtle_counter",turtleCounter);
+ 
 twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-poses = nh.subscribe("pose", 5 , &Subs::controlCallBack,this);
-
- sub= nh.subscribe("/predator/specifier", 5, &turtleBrain::setPredatorCallback,this);
- movementSubscriber=nh.subscribe("/teleop/cmd_vel",5,&turtleBrain::movementCallBack,this); 
+// predator_pose=nh.advertise<turtlesim::Pose>("predator/pose",1);
+poses = nh.subscribe("pose", 5 , &turtleBrain::controlCallBack,this);
+sub= nh.subscribe("/predator/specifier", 5, &turtleBrain::setPredatorCallback,this);
+movementSubscriber=nh.subscribe("/teleop/cmd_vel",5,&turtleBrain::predatorMovementCallBack,this); 
 }
 
-void turtleBrain::movementCallBack(geometry_msgs::Twist twist){
-if(flagImPredator==1){
+void turtleBrain::controlCallBack(const turtlesim::PosePtr& pose){
+  // ROS_ERROR("set param pose turtle_%d", turtleCounter);
+  if(imPredator==1){
+    predator_pose = *pose;
+    nh.setParam("predator_location_x",predator_pose.x);
+    nh.setParam("predator_location_y",predator_pose.y);
+    nh.setParam("predator_location_theta",predator_pose.theta);
+  }else{
+    my_pose = *pose;
+  }
+  
+}
+
+
+void turtleBrain::predatorMovementCallBack(geometry_msgs::Twist twist){
+ROS_ERROR("predator move cb %d",imPredator);
+if(imPredator==1){
   geometry_msgs::Twist iMove;
   iMove.linear.x=twist.linear.x;
   iMove.angular.z=twist.angular.z;
-  twist_pub.public(iMove);
+  twist_pub.publish(iMove);
+   }
 }
-}
-void Subs::controlCallBack(const turtlesim::PosePtr& pose){
-
-  ROS_INFO("set param pose turtle_%d", turtleName);
-  // nh.setParam(turtleName,pose);
-  nh.setParam("1",pose);
-}
-
 
 
 void turtleBrain::setPredatorCallback(std_msgs::Int32 counter){
-ROS_INFO("predator changed");    
-int predator=counter1.data;
+ROS_ERROR("predator changed %d",counter.data);    
+predator=counter.data;
+}
 
-
-ros::Rate r(1);    
+int main(int argc, char **argv)
+{
+   ros::init(argc, argv, "Brain");
+   turtleBrain turtle_brain=turtleBrain();
+   ros::Rate r(10);    
   while (ros::ok())
   {
-    if(turtleName==predator){
-         flag=1;
+    // ROS_ERROR("t.c: %d\np: %d ",turtle_brain.turtleCounter,predator);
+    if(turtle_brain.turtleCounter==predator){
+      //  ROS_ERROR("i'm a predator");
+      imPredator=1;
     }else{
-// for each turtle get position
-      nh2.getParam("data1x",positions[0].x);
-      nh2.getParam("data1y",positions[0].y);
-      nh2.getParam("data1theta",positions[0].theta);
-      nh2.getParam("data1angular",positions[0].angular_velocity);
-      nh2.getParam("data2x",positions[1].x);
-      nh2.getParam("data2y",positions[1].y);
-      nh2.getParam("data2theta",positions[1].theta);
-      nh2.getParam("data2angular",positions[1].angular_velocity);
-      nh2.getParam("data3x",positions[2].x);
-      nh2.getParam("data3y",positions[2].y);
-      nh2.getParam("data3theta",positions[2].theta);
-      nh2.getParam("data3angular",positions[2].angular_velocity);
-      nh2.getParam("data4x",positions[3].x);
-      nh2.getParam("data4y",positions[3].y);
-      nh2.getParam("data4theta",positions[3].theta);
-      nh2.getParam("data4angular",positions[3].angular_velocity);
-      nh2.getParam("data5x",positions[4].x);
-      nh2.getParam("data5y",positions[4].y);
-      nh2.getParam("data5theta",positions[4].theta);
-      nh2.getParam("data5angular",positions[4].angular_velocity);
-
-    
-     
-        //cout<<i<<" "<<positions[i].theta<<" "<< positions[predator].theta<<(double)(M_PI/2)<<endl;
-        if((positions[i].theta>0 && positions[predator].theta<0) || (positions[i].theta<0 && positions[predator].theta>0)){
-          //if(positions[i].theta==(double)(M_PI/2) + positions[predator].theta || positions[i].theta==(double)(-(M_PI/2)) + positions[predator].theta){
-             twist.angular.z=0; 
-             twist.linear.x = rand()%5; 
-             twist_pub.publish(twist);  
-      
-        //} 
-         
+      // ROS_ERROR("i'm thinking");
+      imPredator=0;
        
-       // cout<<"wants to escape: "<<i<<"  "<<(int)tan(positions[i].theta)<<endl;
-     //   cout<<"predator: "<<(int)(-(1/tan(positions[predator].theta)))<<endl;
-// if((int)tan(positions[i].theta)== (int)(-(1/tan(positions[predator].theta)))){ 
-  //  cout<<"amood"<<endl;
-  //  twist.angular.z=0; 
-  //  twist.linear.x = 2.0; 
-  //  twist_pub_[i].publish(twist);  
- }else{
-   // cout<<(atan(positions[i].y/positions[i].x)-atan(-(positions[predator].x/positions[predator].y)))<<endl;
-     twist.linear.x = 0;
-     //positions[i].theta=M_PI/2 + positions[predator].theta;
-     int randAngular=rand()%2;
-     if(randAngular==0){
-    // positions[i].theta=M_PI/2 + positions[predator].theta;    
-     twist.angular.z=(double)(M_PI/2) + positions[predator].theta;
-     }else if(randAngular==1){
-         // positions[i].theta=-(M_PI/2) + positions[predator].theta;
-          twist.angular.z=(double)(-(M_PI/2)) + positions[predator].theta;
-     }
-     twist_pub.publish(twist);
-     positions[i].theta=twist.angular.z;
-     //twist.angular.z=(atan(positions[i].y/positions[i].x)-atan(-(positions[predator].x/positions[predator].y)));
-     
-    //  twist.linear.x=2.0;
-    //  twist.angular.z=0;
-    //  twist_pub_[i].publish(twist);
-}
+        turtle_brain.nh.getParam("/predator_location_x", turtle_brain.predator_pose.x);
+        turtle_brain.nh.getParam("/predator_location_y", turtle_brain.predator_pose.y);
+        turtle_brain.nh.getParam("/predator_location_theta", turtle_brain.predator_pose.theta);
+    
+       if(( turtle_brain.my_pose.theta>0 &&  turtle_brain.predator_pose.theta<0) || ( turtle_brain.my_pose.theta<0 &&  turtle_brain.predator_pose.theta>0)){
+              turtle_brain.twist_msg.angular.z=0; 
+              turtle_brain.twist_msg.linear.x = rand()%5; 
+              turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
+      
+         }else{
+              
+              turtle_brain.twist_msg.linear.x = 0;
+             int randAngular=rand()%2;
+             if(randAngular==0){
+                 turtle_brain.twist_msg.angular.z=(double)(M_PI/2) +  turtle_brain.my_pose.theta;
+               }else if(randAngular==1){
+                   turtle_brain.twist_msg.angular.z=(double)(-(M_PI/2)) +  turtle_brain.my_pose.theta;
+         }
+             
+              turtle_brain.twist_pub.publish(turtle_brain.twist_msg);
+              turtle_brain.my_pose.theta=turtle_brain.twist_msg.angular.z;
+    
+            }
    
-       }
-     
-
-   r.sleep();  
+        }
+   ros::spinOnce();
+   r.sleep();     
   }
-}
-int main(int argc, char *argv[])
-{
-   ros::init(argc, argv, "publishers");
-   turtleBrain publishers=turtleBrain();
-   ros::spin();  
+   
     return 0;
 }

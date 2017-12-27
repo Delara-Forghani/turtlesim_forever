@@ -10,7 +10,7 @@ project(spawn)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  turtlesim 
+  turtle_sim 
 )
 
 ## System dependencies are found with CMake's conventions

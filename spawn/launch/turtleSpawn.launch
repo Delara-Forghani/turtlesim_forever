@@ -1,5 +1,11 @@
 <launch>
 
 <node name="myTurtle" pkg="spawn" type="spawn" args="1 7 0 turtle1"/>
-
+<group ns="turtle1">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+<node name="myTurtle2" pkg="spawn" type="spawn" args="1 7 0 turtle2"/>
+<group ns="turtle2">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
 </launch>

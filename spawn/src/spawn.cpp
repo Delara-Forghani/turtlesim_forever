@@ -6,7 +6,6 @@
 
 using namespace std;
 
-ros::Publisher pub;
 
 
 
@@ -14,20 +13,23 @@ int main(int argc,char ** argv){
 
     ros::init(argc,argv,"myTurtle");
     ros::NodeHandle nh;
-    int turtle_name=0;
-    nh.getParam("turtle_counter",turtle_name);
-    nh.setParam("turtle_counter",turtle_name++);
+    int turtle_num=0;
+    nh.getParam("turtle_counter",turtle_num);
+    turtle_num++;
+    nh.setParam("turtle_counter",turtle_num);
     ros::service::waitForService("spawn",20);
-    ros::ServiceClient add_turtle = nh.serviceClient<turtlesim::Spawn>("spawn");
+    ros::ServiceClient add_turtle = nh.serviceClient<turtlesim::Spawn>("/spawn");
     
-
     turtlesim::Spawn srv;
     srv.request.x = atof(argv[1]); //added
     srv.request.y = atof(argv[2]); //added
     srv.request.theta = atof(argv[3]);
     srv.request.name=argv[4];
     
-    ROS_INFO("%d  %s",argc,argv);
+
+    nh.getParam("turtle_counter",turtle_num);
+    cout<<turtle_num<<endl;
+   // ROS_INFO("%d  %s",argc,argv);
    // cout<<turtle_name<<endl;
     
     add_turtle.call(srv);
