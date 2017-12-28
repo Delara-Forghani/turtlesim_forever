@@ -5,7 +5,7 @@
 #include <math.h>
 #include <cstdlib>
 
-
+#define PI 3.14159265
 using namespace std;
 
 
@@ -86,7 +86,7 @@ publishes a geometry_msgs::Twist message on cmd_vel so that the user can handle 
 */
 
 void turtleBrain::predatorMovementCallBack(geometry_msgs::Twist twist){
-  ROS_ERROR("predator move cb %d",imPredator);
+  //ROS_ERROR("predator move cb %d",imPredator);
   if(imPredator==1){
     geometry_msgs::Twist iMove;
     iMove.linear.x=twist.linear.x;
@@ -99,7 +99,7 @@ void turtleBrain::predatorMovementCallBack(geometry_msgs::Twist twist){
 It gets the turtle number which specifies the predator
 */
 void turtleBrain::setPredatorCallback(std_msgs::Int32 counter){
-  ROS_ERROR("predator changed %d",counter.data);    
+  //ROS_ERROR("predator changed %d",counter.data);    
   predator=counter.data;
 }
 
@@ -112,6 +112,11 @@ int main(int argc, char **argv)
    ros::Rate r(10);    
    while (ros::ok())
     {
+
+      // cout<<turtle_brain.my_pose.theta<<endl;
+      // cout<<turtle_brain.predator_pose.theta<<endl;
+      ROS_ERROR("x: %f y: %f",turtle_brain.predator_pose.x,turtle_brain.predator_pose.y);
+      ROS_ERROR("turtle number %d",turtle_brain.turtleCounter);
       // ROS_ERROR("t.c: %d\np: %d ",turtle_brain.turtleCounter,predator);
       if(turtle_brain.turtleCounter==predator){
         //  ROS_ERROR("i'm a predator");
@@ -123,8 +128,23 @@ int main(int argc, char **argv)
       turtle_brain.nh.getParam("/predator_location_x", turtle_brain.predator_pose.x);
       turtle_brain.nh.getParam("/predator_location_y", turtle_brain.predator_pose.y);
       turtle_brain.nh.getParam("/predator_location_theta", turtle_brain.predator_pose.theta);
+     
     
-      if(( turtle_brain.my_pose.theta*turtle_brain.predator_pose.theta  <= 0)){
+   if(turtle_brain.my_pose.x==0.000000 || turtle_brain.my_pose.x==11.088889 || turtle_brain.my_pose.y==0.000000 || turtle_brain.my_pose.y==11.088889 ){
+       ROS_ERROR("Came here");
+       turtle_brain.twist_msg.angular.z = PI +turtle_brain.my_pose.theta;
+       turtle_brain.twist_msg.linear.x = 2.0;
+        turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
+     }else if(turtle_brain.my_pose.x==turtle_brain.predator_pose.x && turtle_brain.my_pose.y==turtle_brain.predator_pose.y){
+        turtle_brain.twist_msg.angular.z=rand()%4; 
+        turtle_brain.twist_msg.linear.x = rand()%5;
+        turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
+       }else if(turtle_brain.my_pose.theta==turtle_brain.predator_pose.theta){
+          turtle_brain.twist_msg.angular.z = rand()%4; 
+          turtle_brain.twist_msg.linear.x = 0;
+          turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
+       }else if(( turtle_brain.my_pose.theta*turtle_brain.predator_pose.theta  <= 0)){
+        
               turtle_brain.twist_msg.angular.z=0; 
               turtle_brain.twist_msg.linear.x = rand()%5; 
               turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
@@ -134,9 +154,9 @@ int main(int argc, char **argv)
               turtle_brain.twist_msg.linear.x = 0;
               int randAngular=rand()%2;
               if(randAngular==0){
-                 turtle_brain.twist_msg.angular.z=(double)(M_PI/2) + turtle_brain.my_pose.theta;
+                 turtle_brain.twist_msg.angular.z=(PI/2) + turtle_brain.my_pose.theta;
                }else if(randAngular==1){
-                   turtle_brain.twist_msg.angular.z=(double)(-(M_PI/2)) + turtle_brain.my_pose.theta;
+                   turtle_brain.twist_msg.angular.z=(-(PI/2)) + turtle_brain.my_pose.theta;
          }
              
               turtle_brain.twist_pub.publish(turtle_brain.twist_msg);
