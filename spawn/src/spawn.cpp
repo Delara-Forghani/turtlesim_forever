@@ -7,13 +7,12 @@
 using namespace std;
 
 
-
+int turtle_num=0;
 
 int main(int argc,char ** argv){
 
     ros::init(argc,argv,"myTurtle");
     ros::NodeHandle nh;
-    int turtle_num=0;
     nh.getParam("turtle_counter",turtle_num);
     turtle_num++;
     nh.setParam("turtle_counter",turtle_num);
@@ -28,9 +27,8 @@ int main(int argc,char ** argv){
     
 
     nh.getParam("turtle_counter",turtle_num);
-    cout<<turtle_num<<endl;
    // ROS_INFO("%d  %s",argc,argv);
-   // cout<<turtle_name<<endl;
+    cout<<turtle_num<<endl;
     
     add_turtle.call(srv);
     

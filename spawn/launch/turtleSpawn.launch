@@ -23,4 +23,14 @@
     <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
 </group>
 
+<node name="myTurtle6" pkg="spawn" type="spawn" args="10 17 7 turtle6"/>
+<group ns="turtle6">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+
+<node name="myTurtle7" pkg="spawn" type="spawn" args="10 17 7 turtle7"/>
+<group ns="turtle7">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+
 </launch>

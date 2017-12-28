@@ -20,7 +20,7 @@ using namespace std;
 
 int counter=1; 
 std_msgs::Int32 temp_var;
-
+int number_of_turtles=0;
 class TeleopTurtle
 {
 public:
@@ -49,7 +49,8 @@ TeleopTurtle::TeleopTurtle():
  
   recognize=nh_.advertise<std_msgs::Int32>("predator/specifier",1); 
   cmd_vel_publisher = nh_.advertise<geometry_msgs::Twist>("/teleop/cmd_vel", 1);
-
+  nh_.getParam("/turtle_counter",number_of_turtles);
+  //ROS_ERROR("the number of turtles %d",test);
 }
 
 int kfd = 0;
@@ -104,7 +105,7 @@ void TeleopTurtle::keyLoop()
   for(;;)
   {
     // get the next event from the keyboard  
-        ROS_INFO("i am waiting \n");
+        //ROS_INFO("i am waiting \n");
 
     if(read(kfd, &c, 1) < 0)
     {
@@ -113,8 +114,8 @@ void TeleopTurtle::keyLoop()
     }
 
     linear_=angular_=0;
-    ROS_INFO("i am running \n");
-    ROS_ERROR("value: 0x%02X\n", c);
+    //ROS_INFO("i am running \n");
+    //ROS_ERROR("value: 0x%02X\n", c);
     
     switch(c)
     {
@@ -140,7 +141,7 @@ void TeleopTurtle::keyLoop()
         break;
         case KEYCODE_E:
         counter++;
-        if(counter > 5){
+        if(counter > number_of_turtles){
           counter=1;
         }
         temp_var.data=counter;
@@ -149,7 +150,7 @@ void TeleopTurtle::keyLoop()
         case KEYCODE_W:
         counter--;
         if(counter < 1){
-        counter=5;
+        counter=number_of_turtles;
         }
         temp_var.data=counter;
         recognize.publish(temp_var);
