@@ -134,7 +134,7 @@ int main(int argc, char **argv)
        ROS_ERROR("Came here");
        turtle_brain.twist_msg.angular.z = PI +turtle_brain.my_pose.theta;
        turtle_brain.twist_msg.linear.x = 2.0;
-        turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
+       turtle_brain.twist_pub.publish( turtle_brain.twist_msg);  
      }else if(turtle_brain.my_pose.x==turtle_brain.predator_pose.x && turtle_brain.my_pose.y==turtle_brain.predator_pose.y){
         turtle_brain.twist_msg.angular.z=rand()%4; 
         turtle_brain.twist_msg.linear.x = rand()%5;

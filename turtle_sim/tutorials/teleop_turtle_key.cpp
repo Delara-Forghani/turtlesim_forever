@@ -164,9 +164,8 @@ void TeleopTurtle::keyLoop()
     {
 
       cmd_vel_publisher.publish(twist);
-      ROS_DEBUG("predator: %d",counter);
       dirty=false;
-      ROS_INFO("before spin");
+      ROS_INFO("before spin %d",counter);
       ros::spinOnce();   
     } 
       
