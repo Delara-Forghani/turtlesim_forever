@@ -1,11 +1,28 @@
 <launch>
 
-<node name="myTurtle" pkg="spawn" type="spawn" args="1 7 0 turtle1"/>
+<node name="myTurtle1" pkg="spawn" type="spawn" args="1 7 0 turtle1"/>
 <group ns="turtle1">
     <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
 </group>
-<node name="myTurtle2" pkg="spawn" type="spawn" args="1 7 0 turtle2"/>
+<node name="myTurtle2" pkg="spawn" type="spawn" args="2 8 10 turtle2"/>
 <group ns="turtle2">
     <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
 </group>
+
+<node name="myTurtle3" pkg="spawn" type="spawn" args="19 9 2 turtle3"/>
+<group ns="turtle3">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+
+<node name="myTurtle4" pkg="spawn" type="spawn" args="7 3 3 turtle4"/>
+<group ns="turtle4">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+
+<node name="myTurtle5" pkg="spawn" type="spawn" args="10 17 7 turtle5"/>
+<group ns="turtle5">
+    <node name="turtle_brain" pkg="turtle_sim" type="turtle_brain"/>
+</group>
+
+
 </launch>

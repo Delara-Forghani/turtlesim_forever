@@ -18,7 +18,7 @@
 using namespace std;
 
 
-int counter=0; 
+int counter=1; 
 std_msgs::Int32 temp_var;
 
 class TeleopTurtle
@@ -140,16 +140,16 @@ void TeleopTurtle::keyLoop()
         break;
         case KEYCODE_E:
         counter++;
-        if(counter > 4){
-          counter=0;
+        if(counter > 5){
+          counter=1;
         }
         temp_var.data=counter;
         recognize.publish(temp_var);
         break;
         case KEYCODE_W:
         counter--;
-        if(counter < 0){
-        counter=4;
+        if(counter < 1){
+        counter=5;
         }
         temp_var.data=counter;
         recognize.publish(temp_var);

@@ -1,4 +1,0 @@
-<launch>
-<node name="turtlesim1" pkg="turtle_sim" type="subscribers" output="screen" />
-
-</launch>
